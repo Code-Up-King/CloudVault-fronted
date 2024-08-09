@@ -10,14 +10,25 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://116.198.242.154:8001/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/api'
+        }
+      }
+    }
+  },
   plugins: [
     vue(),
     AutoImport({
       imports: ['vue', 'vue-router', 'pinia'],
-      resolvers: [ElementPlusResolver({importStyle: "sass"})],
+      resolvers: [ElementPlusResolver({ importStyle: "sass" })],
     }),
     Components({
-      resolvers: [ElementPlusResolver({importStyle: "sass"})],
+      resolvers: [ElementPlusResolver({ importStyle: "sass" })],
     }),
   ],
   resolve: {

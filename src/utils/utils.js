@@ -2,7 +2,8 @@
  * Created by mac 
  */
 let host = window.location.hostname;
-let apiUrl = "http://127.0.0.1:30651/api/"
+let apiUrl = "/api" 
+// "http://116.198.242.154:8001/api/"
 let socketUrl = "http://127.0.0.1:30651"
 
 

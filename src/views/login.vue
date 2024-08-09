@@ -13,8 +13,8 @@
                 </div>
                 <!-- 密码登录 -->
                 <el-form v-else :model="data.form" :rules="data.rules" ref="formRef">
-                    <el-form-item prop="email">
-                        <el-input clearable placeholder="请输入邮箱" v-model.trim="data.form.email" :prefix-icon="User"
+                    <el-form-item prop="username">
+                        <el-input clearable placeholder="请输入用户名" v-model.trim="data.form.username" :prefix-icon="User"
                             maxLength="150" />
                     </el-form-item>
                     <el-form-item prop="password" v-if="data.opType == 1">
@@ -23,47 +23,19 @@
                     </el-form-item>
 
                     <!-- 注册 -->
-                    <div v-if="data.opType == 0 || data.opType == 2">
-                        <el-form-item prop="emailCode">
-                            <div class="send-email-panel f fac">
-                                <el-input placeholder="请输入邮箱验证码" v-model.trim="data.form.emailCode"
-                                    :prefix-icon="Iphone" />
-                                <el-button class="send-mail-btn" type="primary" @click="">获取验证码</el-button>
-                            </div>
-                            <el-popover placement="left" :width="500" trigger="click">
-                                <div>
-                                    <p>1、在垃圾箱中查找邮箱验证码</p>
-                                    <p>2、在邮箱中头像->设置->反垃圾->白名单->设置邮箱地址白名单</p>
-                                    <p>3、将邮箱【2627.311935@qq.com】添加到白名单</p>
-                                </div>
-                                <template #reference>
-                                    <el-link type="primary" :underline="false">未收到邮箱验证码？</el-link>
-                                </template>
-                            </el-popover>
-                        </el-form-item>
-                        <el-form-item prop="nickname" v-if="data.opType == 0">
-                            <el-input placeholder="请输入昵称" v-model.trim="data.form.nickname" :prefix-icon="User"
-                                maxLength="20" />
-                        </el-form-item>
-                        <!-- 注册密码，找回密码 -->
-                        <el-form-item prop="registerPassword">
+                    <div v-if="data.opType == 0">
+                        <!-- 注册密码 -->
+                        <el-form-item prop="password">
                             <el-input show-password type="password" placeholder="请输入密码"
-                                v-model.trim="data.form.registerPassword" :prefix-icon="Lock" maxLength="20" />
+                                v-model.trim="data.form.password" :prefix-icon="Lock" maxLength="20" />
                         </el-form-item>
-                        <el-form-item prop="reRegisterPassword">
+                        <el-form-item prop="confirmPassword">
                             <el-input show-password type="password" placeholder="请再次输入密码"
-                                v-model.trim="data.form.reRegisterPassword" :prefix-icon="Lock" maxLength="20" />
+                                v-model.trim="data.form.confirmPassword" :prefix-icon="Lock" maxLength="20" />
                         </el-form-item>
                     </div>
 
-                    <el-form-item prop="checkCode">
-                        <div class="check-code-panel f fac">
-                            <el-input placeholder="请输入验证码" v-model.trim="data.form.checkCode" :prefix-icon="Iphone"
-                                @keyup.enter="submit" />
-                            <img :src="data.checkCodeUrl" class="check-code" @click="getQrImg" />
-                        </div>
-                    </el-form-item>
-
+                    
                     <!-- 登陆 -->
                     <el-form-item v-if="data.opType == 1">
                         <div style="width: 100%;">
@@ -71,17 +43,12 @@
                                 <el-checkbox v-model="data.rememberMe" label="记住我" />
                             </div>
                             <div class="f fpj">
-                                <el-link type="primary" :underline="false" @click="changeType(2)">忘记密码？</el-link>
+                                <div></div>
                                 <el-link type="primary" :underline="false" @click="changeType(0)">没有账号？</el-link>
                             </div>
                         </div>
                     </el-form-item>
-                    <!-- 找回密码 -->
-                    <el-form-item v-if="data.opType == 2">
-                        <div class="no-account">
-                            <el-link type="primary" :underline="false" @click="changeType(1)">去登陆</el-link>
-                        </div>
-                    </el-form-item>
+                    
                     <!-- 注册 -->
                     <el-form-item v-if="data.opType == 0">
                         <div class="no-account">
@@ -92,7 +59,6 @@
                         <el-button type="primary" style="width: 100%" @click="submit">
                             <span v-if="data.opType == 0">注册</span>
                             <span v-if="data.opType == 1">登陆</span>
-                            <span v-if="data.opType == 2">重置密码</span>
                         </el-button>
                     </el-form-item>
                 </el-form>
@@ -103,9 +69,9 @@
 
 <script setup>
 import { User, Lock, Iphone } from '@element-plus/icons-vue'
-import Verify from "@/utils/verify"
+import http from '@/api/user'
 const checkRePassword = (rule, value, callback) => {
-    if (value !== data.form.registerPassword) {
+    if (value !== data.form.password) {
         callback(new Error(rule.message))
     } else {
         callback()
@@ -116,28 +82,22 @@ const formRef = ref(null)
 const data = reactive({
     opType: 1,
     form: {},
-    checkCodeUrl: '',
     isWxLogin: false,
     rules: {
-        email: [
-            { required: true, message: '请输入邮箱', trigger: 'blur' },
-            { validator: Verify.email, message: '请输入正确的邮箱', trigger: 'blur' }
+        username: [
+            { required: true, message: '请输入用户名', trigger: 'blur' },            
+            { min: 3, max: 12, message: '用户名必须为3-12位', trigger: 'blur' }
+
         ],
         password: [
             { required: true, message: '请输入密码', trigger: 'blur' },
             { min: 6, max: 12, message: '密码必须为6-12位', trigger: 'blur' }
         ],
-        nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
-        registerPassword: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 6, max: 12, message: '密码必须为6-12位', trigger: 'blur' }
-        ],
-        reRegisterPassword: [
+        confirmPassword: [
             { required: true, message: '请再次输入密码', trigger: 'blur' },
+            { min: 6, max: 12, message: '密码必须为6-12位', trigger: 'blur' },
             { validator: checkRePassword, message: '两次密码不一致', trigger: 'blur' }
         ],
-        checkCode: [{ required: true, message: '请输入图片验证码' }],
-        emailCode: [{ required: true, message: '请输入邮箱验证码' }]
     }
 })
 
@@ -146,15 +106,9 @@ const changeType = (type) => {
     data.opType = type
 }
 
-// 图片验证码
-const getQrImg = () => {
-    // data.checkCodeUrl = utils.apiUrl + 'account/qrcode?&t=' + new Date().getTime()
-}
 
 // 重置表单
-const resetForm = () => {
-    // 刷新验证码
-    getQrImg()
+const resetForm = () => {    
     formRef.value.resetFields()
     data.form = {}
 }
@@ -167,32 +121,23 @@ const submit = () => {
             return
         }
         let params = {}
-        Object.assign(params, data.form)
-        // 注册 找回密码
-        if (data.opType == 0 || data.opType == 2) {
-            params.password = params.reRegisterPassword
-            delete params.reRegisterPassword
-            delete params.registerPassword
-        }
+        Object.assign(params, data.form)        
         switch (data.opType) {
             case 0: {
                 // 注册
-                // http.register(params).then(res => {
-                //     ElMessage({ message: res.message, type: 'success' })
-                //     changeType(1)
-                // })
-                console.log(params);
-
+                http.register(params).then(res => {
+                    ElMessage({ message: res.message, type: 'success' })
+                    changeType(1)
+                })
                 break
             }
             case 1: {
                 // 登录
-                // http.login(params).then(res => {
-                //     ElMessage({ message: res.message, type: 'success' })
-                //     sessionStorage.setItem('yp-account', params)
-                //     router.replace('/')
-                // })
-                console.log(params);
+                http.login(params).then(res => {
+                    ElMessage({ message: res.message, type: 'success' })
+                    sessionStorage.setItem('yp-account', params)
+                    router.replace('/')
+                })
                 break
             }
             case 2: {
@@ -278,7 +223,7 @@ const submit = () => {
                 margin-bottom: 0.2rem;
             }
 
-            .send-email-panel {
+            .send-username-panel {
                 .send-mail-btn {
                     margin-left: 0.05rem;
                 }
