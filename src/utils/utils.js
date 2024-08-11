@@ -2,11 +2,34 @@
  * Created by mac 
  */
 let host = window.location.hostname;
-let apiUrl = "/api" 
-// "http://116.198.242.154:8001/api/"
+let apiUrl = "http://121.40.204.51:8001/"
+// "http://121.40.204.51:8001/api/"
 let socketUrl = "http://127.0.0.1:30651"
 
 
+const size2Str = (limit) => {
+    var size = ''
+    if (limit < 1024) {
+      // 小于 1KB 转为B
+      size = limit.toFixed(2) + 'B'
+    } else if (limit < 1024 * 1024) {
+      // 小于 1MB 转为KB
+      size = (limit / 1024).toFixed(2) + 'KB'
+    } else if (limit < 1024 * 1024 * 1024) {
+      // 小于 1GB 转为MB
+      size = (limit / (1024 * 1024)).toFixed(2) + 'MB'
+    } else {
+      // 小于 1TB 转为GB
+      size = (limit / (1024 * 1024 * 1024)).toFixed(2) + 'GB'
+    }
+    var sizeStr = size + ''
+    var index = sizeStr.indexOf('.')
+    var dou = sizeStr.substring(index + 1, index + 3)
+    if (dou == '00') {
+      return sizeStr.substring(0, index) + sizeStr.substring(index + 3, sizeStr.length)
+    }
+    return size
+}
 
 const formatDate = (timeStamp, type = 'Y-M-D', auto = false) => {
     let time = (timeStamp + '').length === 10 ? new Date(parseInt(timeStamp) * 1000) : new Date(parseInt(timeStamp));
@@ -294,5 +317,6 @@ export default {
     arrSortByKey,
     sortObj,
     flatten,
-    clearObj
+    clearObj,
+    size2Str
 }

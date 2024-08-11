@@ -14,7 +14,7 @@ const request = axios.create({
 // 请求拦截器
 request.interceptors.request.use(
     config => {
-        config.headers.Authorization = sessionStorage.token;
+        config.headers.authorization = sessionStorage.token;
         return config
     },
     function (error) {
@@ -23,28 +23,28 @@ request.interceptors.request.use(
 )
 // 响应拦截器
 request.interceptors.response.use(function(response) {
-    if (response.data.code == 200) {
+    if (response.data.code == 1) {
         return Promise.resolve(response.data);
     } else if (response.data.code == 401) {
         ElMessage({
-            message: response.data.message,
+            message: response.data.msg,
             type: 'error'
         })
         sessionStorage.removeItem('token')
         router.push({ path: '/login' })
     } else {
         ElMessage({
-            message: response.data.message,
+            message: response.data.msg,
             type: 'error'
         })
-        return Promise.reject(response.data.message);
+        return Promise.reject(response.data.msg);
     }
 }, function(error) {
     if (error.response) {
         switch (error.response.status) {
           case 401:
             ElMessage({
-                message: error.response.data.message,
+                message: error.response.data.msg,
                 type: 'error'
             })
             sessionStorage.removeItem('token')

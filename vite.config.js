@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://116.198.242.154:8001/',
+        target: 'http://121.40.204.51:8001/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/api'

@@ -14,6 +14,6 @@ export default {
         return request.post(apiList.register, data)
     },
     userInfo: data => {
-        return request.post(apiList.userInfo, { params: data })
+        return request.get(apiList.userInfo, { params: data })
     },
 }

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import userInfoStore from '@/stores/user'
 import Layout from "@/views/index.vue"
 
 const router = createRouter({

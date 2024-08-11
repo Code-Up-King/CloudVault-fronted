@@ -70,6 +70,9 @@
 <script setup>
 import { User, Lock, Iphone } from '@element-plus/icons-vue'
 import http from '@/api/user'
+
+const router = useRouter()
+
 const checkRePassword = (rule, value, callback) => {
     if (value !== data.form.password) {
         callback(new Error(rule.message))
@@ -81,8 +84,11 @@ const checkRePassword = (rule, value, callback) => {
 const formRef = ref(null)
 const data = reactive({
     opType: 1,
-    form: {},
+    form: {
+        ...JSON.parse(localStorage.getItem('yp-account'))
+    },
     isWxLogin: false,
+    rememberMe: JSON.parse(localStorage.getItem('yp-account')).rememberMe || false,
     rules: {
         username: [
             { required: true, message: '请输入用户名', trigger: 'blur' },            
@@ -126,7 +132,7 @@ const submit = () => {
             case 0: {
                 // 注册
                 http.register(params).then(res => {
-                    ElMessage({ message: res.message, type: 'success' })
+                    ElMessage({ message: res.msg, type: 'success' })
                     changeType(1)
                 })
                 break
@@ -134,8 +140,14 @@ const submit = () => {
             case 1: {
                 // 登录
                 http.login(params).then(res => {
-                    ElMessage({ message: res.message, type: 'success' })
-                    sessionStorage.setItem('yp-account', params)
+                    ElMessage({ message: res.msg, type: 'success' })
+                    sessionStorage.setItem('token', res.data.token)
+                    if (data.rememberMe) {
+                        localStorage.setItem('yp-account', JSON.stringify({
+                            ...params,
+                            rememberMe: true
+                        }))
+                    }                    
                     router.replace('/')
                 })
                 break
