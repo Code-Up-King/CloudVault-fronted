@@ -1,52 +1,19 @@
 <template>
     <div class="menu f">
         <div class="menu-list">
-            <div class="menu-item active">
+            <div class="menu-item" @click="$router.push(item.path)" :class="{ 'active': $route.path.search(item.path) != -1 }" v-for="item in userInfo.menuList">
                 <div class="item-img">                    
-                    <i class="iconfont icon-cloude"></i>
+                    <i :class="['iconfont', `icon-${item.icon}`]"></i>
                 </div>
-                <div class="text">首页</div>
-            </div>
-            <div class="menu-item">
-                <div class="item-img">
-                    <i class="iconfont icon-share"></i>
-                </div>
-                <div class="text">分享</div>
-            </div>
-            <div class="menu-item">
-                <div class="item-img">
-                    <i class="iconfont icon-del"></i>
-                </div>
-                <div class="text">回收站</div>
+                <div class="text">{{item.name}}</div>
             </div>
         </div>
 
         <div class="menu-sub-list">
-            <div class="menu-sub-item active f fac">
-                <i class="iconfont icon-all"></i>
-                <span class="text">全部</span>
+            <div class="menu-sub-item f fac" @click="$router.push(item.path)" :class="{ 'active': $route.path.search(item.path) != -1 }" v-for="item in menuList">
+                <i :class="['iconfont', `icon-${item.icon}`]"></i>
+                <span class="text">{{item.name}}</span>
             </div>
-            <div class="menu-sub-item f fac">
-                <i class="iconfont icon-video"></i>
-                <span class="text">视频</span>
-            </div>
-            <div class="menu-sub-item f fac">
-                <i class="iconfont icon-music"></i>
-                <span class="text">音频</span>
-            </div>
-            <div class="menu-sub-item f fac">
-                <i class="iconfont icon-image"></i>
-                <span class="text">图片</span>
-            </div>
-            <div class="menu-sub-item f fac">
-                <i class="iconfont icon-doc"></i>
-                <span class="text">文档</span>
-            </div>
-            <div class="menu-sub-item f fac">
-                <i class="iconfont icon-more"></i>
-                <span class="text">其他</span>
-            </div>
-
 
             <div class="space-info">
                 <div>空间使用</div>
@@ -69,6 +36,13 @@ import userInfoStore from '@/stores/user'
 import utils from '@/utils/utils.js'
 
 const userInfo = userInfoStore()
+const route = useRoute()
+
+// 菜单
+const menuList = computed(() => {
+    return userInfo.menuList.filter(item => item.path.startsWith(`/${route.meta.belong}`))[0]?.children ?? []
+})
+
 
 const percentage = computed(() => {
     if (!userInfo.totalSize) {

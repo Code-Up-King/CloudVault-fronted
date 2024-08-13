@@ -118,7 +118,7 @@ const formatDate = (timeStamp, type = 'Y-M-D', auto = false) => {
 
 const flatten = (ary) => {
 	return ary.reduce((pre, cur) => {
-		return pre.concat(Array.isArray(cur.children) ? flatten(cur.children) : {path: cur.path, name:cur.name, status: cur.status, id: cur.id});
+		return pre.concat(Array.isArray(cur.children) ? flatten(cur.children) : {path: cur.path, name:cur.name});
 	}, [])
 }
 

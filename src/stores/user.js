@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import utils from '@/utils/utils'
 import http from '@/api/user'
+import yunpanMenu from "./menu"
 
 const userInfoStore = defineStore('userInfo', {
   state: () => {
@@ -15,9 +16,10 @@ const userInfoStore = defineStore('userInfo', {
   },
   actions: {
     getUserInfo() {
+      this.setMenuList(yunpanMenu)
       http.userInfo().then(res => {
         this.userInfo = res.data
-        // this.setMenuList(res.data.menuList)
+        this.setMenuList(yunpanMenu)
       })
     },
     setMenuList(menuList) {
