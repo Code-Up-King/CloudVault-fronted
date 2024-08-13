@@ -9,11 +9,7 @@
                 <el-popover placement="bottom" width="auto" popper-style="padding:0px;border-radius:8px;"
                     trigger="click" :offset="30" :hide-after="10" v-model:visible="data.transferVisible">
                     <template #reference>
-                        <span class="btn-radius f fac fpc">
-                            <el-icon>
-                                <Sort />
-                            </el-icon>
-                        </span>
+                        <i class="iconfont icon-transfer"></i>
                     </template>
                     <template #default>
                         <button>我是弹框内容</button>
@@ -89,13 +85,8 @@ const data = reactive({
         }
 
         .right {
-            .btn-radius {
-                width: 0.28rem;
-                height: 0.28rem;
-                cursor: pointer;
-                font-weight: bold;
-                font-size: 0.2rem;
-                margin-right: 0.1rem;
+            .iconfont {                
+                font-size: 0.16rem;
             }
 
             .user-info {

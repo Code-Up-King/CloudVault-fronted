@@ -2,26 +2,20 @@
     <div class="menu f">
         <div class="menu-list">
             <div class="menu-item active">
-                <div class="item-img">
-                    <el-icon>
-                        <UploadFilled />
-                    </el-icon>
+                <div class="item-img">                    
+                    <i class="iconfont icon-cloude"></i>
                 </div>
                 <div class="text">首页</div>
             </div>
             <div class="menu-item">
                 <div class="item-img">
-                    <el-icon>
-                        <Share />
-                    </el-icon>
+                    <i class="iconfont icon-share"></i>
                 </div>
                 <div class="text">分享</div>
             </div>
-            <div class="menu-item active">
+            <div class="menu-item">
                 <div class="item-img">
-                    <el-icon>
-                        <DeleteFilled />
-                    </el-icon>
+                    <i class="iconfont icon-del"></i>
                 </div>
                 <div class="text">回收站</div>
             </div>
@@ -29,22 +23,28 @@
 
         <div class="menu-sub-list">
             <div class="menu-sub-item active f fac">
-                <el-icon>
-                    <Menu />
-                </el-icon>
+                <i class="iconfont icon-all"></i>
                 <span class="text">全部</span>
             </div>
             <div class="menu-sub-item f fac">
-                <el-icon>
-                    <CaretRight />
-                </el-icon>
+                <i class="iconfont icon-video"></i>
                 <span class="text">视频</span>
             </div>
             <div class="menu-sub-item f fac">
-                <el-icon>
-                    <Headset />
-                </el-icon>
+                <i class="iconfont icon-music"></i>
                 <span class="text">音频</span>
+            </div>
+            <div class="menu-sub-item f fac">
+                <i class="iconfont icon-image"></i>
+                <span class="text">图片</span>
+            </div>
+            <div class="menu-sub-item f fac">
+                <i class="iconfont icon-doc"></i>
+                <span class="text">文档</span>
+            </div>
+            <div class="menu-sub-item f fac">
+                <i class="iconfont icon-more"></i>
+                <span class="text">其他</span>
             </div>
 
 
@@ -57,9 +57,7 @@
                     <div class="use">
                         {{utils.size2Str(userInfo.freeSize || 0)}} / {{ utils.size2Str(userInfo.totalSize || 0) }}
                     </div>
-                    <el-icon class="refresh" :size="14" @click="">
-                        <SyncOutlined />
-                    </el-icon>
+                    <el-icon class="refresh"><Refresh /></el-icon>
                 </div>
             </div>
         </div>
@@ -108,9 +106,9 @@ const percentage = computed(() => {
             }
 
             .item-img {
-                .el-icon {
-                    width: 0.36rem;
-                    height: 0.36rem;
+                .iconfont {
+                    // width: 0.36rem;
+                    // height: 0.36rem;
                     font-size: 0.3rem;
                 }
             }
@@ -146,8 +144,8 @@ const percentage = computed(() => {
                 background: #fafafa;
             }
 
-            .el-icon {
-                font-size: 0.18rem;
+            .iconfont {
+                font-size: 0.14rem;
             }
 
             .text {
@@ -198,6 +196,7 @@ const percentage = computed(() => {
                 .refresh {
                     cursor: pointer;
                     color: #05a1f5;
+                    font-size: 0.14rem;
                 }
             }
         }
