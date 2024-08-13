@@ -3,7 +3,8 @@ import request from '@/utils/http'
 const apiList = {
     login: 'user/login',
     register: 'user/register',
-    userInfo: 'user/userInfo'
+    userInfo: 'user/userInfo',
+    updateInfo: 'user/update',
 }
 
 export default {
@@ -15,5 +16,8 @@ export default {
     },
     userInfo: data => {
         return request.get(apiList.userInfo, { params: data })
+    },
+    updateInfo: data => {
+        return request.post(apiList.updateInfo, data)
     },
 }

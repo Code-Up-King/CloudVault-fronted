@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import utils from '@/utils/utils'
 import http from '@/api/user'
-import yunpanMenu from "./menu"
+import yunpanMenu from "../model/menu"
 
 const userInfoStore = defineStore('userInfo', {
   state: () => {

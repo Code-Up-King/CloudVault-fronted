@@ -29,7 +29,7 @@ export default [{
         icon: 'doc',
         parentName: '首页',
     }, {
-        path: '/home/others',
+        path: '/home/other',
         name: '其他',
         icon: 'more',
         parentName: '首页',
