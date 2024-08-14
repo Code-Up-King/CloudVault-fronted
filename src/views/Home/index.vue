@@ -15,9 +15,12 @@
         </div>
 
         <div class="navigation">全部文件</div>
-        <div class="table" v-if="data.total > 0">
-
-        </div>
+        <el-table class="table" :data="data.list" v-if="data.list.length > 0">
+            <el-table-column type="selection" width="50" />
+            <el-table-column prop="fileName" label="文件名" />
+            <el-table-column prop="updateTime" label="修改时间" width="200" />
+            <el-table-column prop="fileSize" label="大小" width="200" />
+        </el-table>
         <div class="null" v-else>
             <div class="empty"></div>
             <div>当前目录为空，上传你的第一个文件吧</div>
@@ -35,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="pagination" v-if="data.total > 0">
+        <div class="pagination" v-if="data.list.length > 0">
             <el-pagination v-model:current-page="data.pageNum" v-model:page-size="data.pageSize" background
                 layout="total, sizes, prev, pager, next, jumper" :total="data.total" @size-change=""
                 @current-change="" />
@@ -46,6 +49,7 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue'
 import category from '@/model/category'
+import http from "@/api/file"
 const route = useRoute()
 const router = useRouter()
 
@@ -54,8 +58,11 @@ const data = reactive({
     pageNum: 1,
     pageSize: 20,
     total: 0,
-    category: 'all'
+    category: 'all',
+    list: [],
+    fileId: 0
 })
+
 
 // 是否是全部页面
 const isAllMenu = computed(() => {
@@ -68,10 +75,25 @@ const fileAccept = computed(() => {
     return categoryItem ? categoryItem.accept : '*'
 })
 
+// 获取文件列表
+const getList = (reset = false) => {
+    if (reset) data.pageNum = 1
+    data.loading = true
+    http.fileList({
+        pageNum: data.pageNum,
+        pageSize: data.pageSize,
+        fileId: data.fileId
+    }).then((res) => {
+        data.list = res.data.records
+        data.total = res.data.total
+    }).finally(() => data.loading = false)
+}
+
 watch(
     () => router.currentRoute.value,
     (newValue) => {
-        data.category = newValue.name.toLowerCase()        
+        data.category = newValue.name.toLowerCase()
+        getList()
     },
     { immediate: true }
 )

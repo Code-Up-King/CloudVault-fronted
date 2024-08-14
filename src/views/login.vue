@@ -88,7 +88,7 @@ const data = reactive({
         ...JSON.parse(localStorage.getItem('yp-account'))
     },
     isWxLogin: false,
-    rememberMe: JSON.parse(localStorage.getItem('yp-account')).rememberMe || false,
+    rememberMe: JSON.parse(localStorage.getItem('yp-account'))?.rememberMe || false,
     rules: {
         username: [
             { required: true, message: '请输入用户名', trigger: 'blur' },            
