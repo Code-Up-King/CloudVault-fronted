@@ -4,7 +4,9 @@ const apiList = {
     login: 'user/login',
     register: 'user/register',
     userInfo: 'user/userInfo',
-    updateInfo: 'user/update',
+    updatePassword: 'user/changePassword',
+    upload: 'user/upload',
+    updateInfo: 'user/update'
 }
 
 export default {
@@ -16,6 +18,12 @@ export default {
     },
     userInfo: data => {
         return request.get(apiList.userInfo, { params: data })
+    },
+    updatePassword: data => {
+        return request.put(apiList.updatePassword, data)
+    },
+    upload: data => {
+        return request.put(apiList.upload, data)
     },
     updateInfo: data => {
         return request.post(apiList.updateInfo, data)

@@ -68,11 +68,14 @@
     <el-dialog class="dialog" v-model="data.updatePasswordVisible" draggable title="修改密码" width="500"
         :before-close="closeUpdatePasswordDialog">
         <el-form ref="formRef" :rules="data.rules" :model="data.form" label-width="auto">
-            <el-form-item label="新密码" prop="password">
-                <el-input placeholder="请输入密码" type="password" v-model="data.form.password" />
+            <el-form-item label="原密码" prop="oldPassword">
+                <el-input placeholder="请输入密码" show-password type="password" v-model="data.form.oldPassword" />
             </el-form-item>
-            <el-form-item label="确认密码" prop="repassword">
-                <el-input placeholder="请再次输入密码" type="password" v-model="data.form.repassword" />
+            <el-form-item label="新密码" prop="newPassword">
+                <el-input placeholder="请输入密码" show-password type="password" v-model="data.form.newPassword" />
+            </el-form-item>
+            <el-form-item label="确认密码" prop="confirmPassword">
+                <el-input placeholder="请再次输入密码" show-password type="password" v-model="data.form.confirmPassword" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -93,7 +96,7 @@ const userInfo = userInfoStore()
 const router = useRouter()
 
 const checkRePassword = (rule, value, callback) => {
-    if (value !== data.form.password) {
+    if (value !== data.form.newPassword) {
         callback(new Error(rule.message))
     } else {
         callback()
@@ -111,12 +114,17 @@ const data = reactive({
     avatarUrl: '',
     updatePasswordVisible: false,
     form: {},
+    file: null,
     rules: {
-        password: [
+        oldPassword: [
             { required: true, message: '请输入密码', trigger: 'blur' },
             { min: 6, max: 12, message: '密码必须为6-12位', trigger: 'blur' }
         ],
-        repassword: [
+        newPassword: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            { min: 6, max: 12, message: '密码必须为6-12位', trigger: 'blur' }
+        ],
+        confirmPassword: [
             { required: true, message: '请再次输入密码', trigger: 'blur' },
             { min: 6, max: 12, message: '密码必须为6-12位', trigger: 'blur' },
             { validator: checkRePassword, message: '两次密码不一致', trigger: 'blur' }
@@ -133,6 +141,7 @@ const openAvatarDialog = () => {
 // 选择图片
 const handleUploadFile = (file) => {
     file = file.file
+    data.file = file
     let img = new FileReader()
     img.readAsDataURL(file)
     img.onload = ({ target }) => {
@@ -142,7 +151,18 @@ const handleUploadFile = (file) => {
 
 // 更新头像TODO
 const updateAvatar = () => {
-
+    const params = new FormData()
+    params.append('image', data.file)
+    http.upload(params).then(res => { 
+        http.updateInfo({
+            username: userInfo.userInfo.username,
+            headImg: res.data.url
+        }).then(result => {
+            ElMessage({ message: result.msg, type: 'success' })
+            userInfo.getUserInfo()
+            data.avatarVisible = false
+        })      
+    })    
 }
 
 // 关闭修改密码对话框
@@ -160,12 +180,11 @@ const updatePassword = () => {
             return
         }
         let params = {
-            username: userInfo.updateInfo.username,
-            password: data.form.password
+            ...data.form
         }
-        http.updateInfo(params).then(res => {
+        http.updatePassword(params).then(res => {
             ElMessage({ message: res.msg, type: 'success' })
-            dialogData.dialogVisible = false
+            data.updatePasswordVisible = false
             ElMessageBox.confirm(
                 '用户信息已失效，请重新登录',
                 '提示',

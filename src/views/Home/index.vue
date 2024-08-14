@@ -53,6 +53,16 @@ import http from "@/api/file"
 const route = useRoute()
 const router = useRouter()
 
+
+const CATEGORYMAP = {
+    'all': 0,
+    'video': 1,
+    'music': 2,
+    'image': 3,
+    'doc': 4,
+    'other': 5
+}
+
 const data = reactive({
     fileName: "",
     pageNum: 1,
@@ -82,7 +92,8 @@ const getList = (reset = false) => {
     http.fileList({
         pageNum: data.pageNum,
         pageSize: data.pageSize,
-        fileId: data.fileId
+        fileId: data.fileId,
+        category: CATEGORYMAP[data.category]
     }).then((res) => {
         data.list = res.data.records
         data.total = res.data.total
