@@ -22,7 +22,7 @@
                 </div>
                 <div class="space-use">
                     <div class="use">
-                        {{utils.size2Str(userInfo.freeSize || 0)}} / {{ utils.size2Str(userInfo.totalSize || 0) }}
+                        {{utils.size2Str((userInfo.userInfo.totalSize - userInfo.userInfo.freeSize) || 0)}} / {{ utils.size2Str(userInfo.userInfo.totalSize || 0) }}
                     </div>
                     <el-icon class="refresh"><Refresh /></el-icon>
                 </div>

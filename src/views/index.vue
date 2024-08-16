@@ -7,12 +7,12 @@
             </div>
             <div class="right f fac">
                 <el-popover placement="bottom" width="auto" popper-style="padding:0px;border-radius:8px;"
-                    trigger="click" :offset="30" :hide-after="10" v-model:visible="data.transferVisible">
+                    trigger="click" :hide-after="10" v-model:visible="data.transferVisible">
                     <template #reference>
                         <i class="iconfont icon-transfer"></i>
                     </template>
                     <template #default>
-                        <button>我是弹框内容</button>
+                        <FileUploader />
                     </template>
                 </el-popover>
                 <el-dropdown>
@@ -90,6 +90,7 @@
 <script setup>
 import userInfoStore from '@/stores/user'
 import AsideMenu from "@/components/AsideMenu.vue"
+import FileUploader from "@/components/FileUploader.vue"
 import http from '@/api/user'
 
 const userInfo = userInfoStore()
